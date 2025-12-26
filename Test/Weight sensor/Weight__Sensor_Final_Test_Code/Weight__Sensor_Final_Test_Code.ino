@@ -1,13 +1,12 @@
-//DIY_CHEAP_PERFECT
 
 #include "HX711.h"
 
 const int LOADCELL_DOUT_PIN = 2;
-const int LOADCELL_SCK_PIN = 14;
+const int LOADCELL_SCK_PIN = 4;
 
 HX711 scale;
 
-//DIY_CHEAP_PERFECT
+
 
 void setup() {
   Serial.begin(57600);
