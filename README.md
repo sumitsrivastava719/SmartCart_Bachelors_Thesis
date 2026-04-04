@@ -32,3 +32,5 @@ More details, documentation, and implementation updates will be added as develop
 **Ayush Kumar** [LinkedIn](https://www.linkedin.com/in/ayush20701/)<br>
 **Krishna Kant Singh** [LinkedIn](https://www.linkedin.com/in/krishnak-singh/)<br>
 **Amit Kumar Das** [LinkedIn](https://www.linkedin.com/in/amit-kumar-das-4047a228a/)<br>
+**Ayush Jaiswal** [LinkedIn](https://www.linkedin.com/in/ayush-jaiswal01)<br>
+
