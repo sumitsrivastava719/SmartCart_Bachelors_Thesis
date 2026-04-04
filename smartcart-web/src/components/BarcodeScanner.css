@@ -1,0 +1,211 @@
+/* ===== Barcode Scanner ===== */
+.scanner {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+/* Viewport */
+.scanner__viewport {
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1.5 / 1;
+  background: #1a1a1a;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    0 4px 20px var(--color-shadow-strong),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.05);
+}
+
+.scanner__reader {
+  width: 100%;
+  height: 100%;
+}
+
+.scanner__reader video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: var(--radius-lg);
+}
+
+/* Hide default html5-qrcode UI elements */
+#barcode-reader__scan_region {
+  min-height: unset !important;
+}
+
+#barcode-reader__dashboard {
+  display: none !important;
+}
+
+#barcode-reader__dashboard_section {
+  display: none !important;
+}
+
+#barcode-reader__dashboard_section_csr {
+  display: none !important;
+}
+
+#barcode-reader img {
+  display: none !important;
+}
+
+#barcode-reader__header_message {
+  display: none !important;
+}
+
+/* Qr shaded region - the scanning box area */
+#barcode-reader__scan_region > div {
+  border: none !important;
+}
+
+/* Placeholder */
+.scanner__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  z-index: 2;
+}
+
+.scanner__icon-wrapper {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: rgba(74, 124, 46, 0.15);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.scanner__icon {
+  width: 32px;
+  height: 32px;
+  color: var(--color-primary-light);
+}
+
+.scanner__label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Corner decorations when scanning */
+.scanner__corners {
+  position: absolute;
+  inset: 8px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.scanner__corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: var(--color-primary-light);
+  border-style: solid;
+  border-width: 0;
+}
+
+.scanner__corner--tl {
+  top: 0; left: 0;
+  border-top-width: 3px;
+  border-left-width: 3px;
+  border-radius: 4px 0 0 0;
+}
+
+.scanner__corner--tr {
+  top: 0; right: 0;
+  border-top-width: 3px;
+  border-right-width: 3px;
+  border-radius: 0 4px 0 0;
+}
+
+.scanner__corner--bl {
+  bottom: 0; left: 0;
+  border-bottom-width: 3px;
+  border-left-width: 3px;
+  border-radius: 0 0 0 4px;
+}
+
+.scanner__corner--br {
+  bottom: 0; right: 0;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+  border-radius: 0 0 4px 0;
+}
+
+/* Animated laser line */
+.scanner__laser {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-primary-light), transparent);
+  box-shadow: 0 0 8px var(--color-primary-light);
+  animation: laserScan 2s ease-in-out infinite;
+}
+
+@keyframes laserScan {
+  0%, 100% { top: 10%; opacity: 0.5; }
+  50% { top: 90%; opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.7; }
+}
+
+/* Scan Feedback */
+.scanner__feedback {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-xl);
+  animation: popIn 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 12px rgba(74, 124, 46, 0.3);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Toggle Button */
+.scanner__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--radius-xl);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all var(--transition-normal);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  color: white;
+  box-shadow: 0 3px 12px rgba(74, 124, 46, 0.3);
+}
+
+.scanner__toggle:active {
+  transform: scale(0.96);
+}
+
+.scanner__toggle--active {
+  background: linear-gradient(135deg, var(--color-danger), #e67e73);
+  box-shadow: 0 3px 12px rgba(231, 76, 60, 0.3);
+}

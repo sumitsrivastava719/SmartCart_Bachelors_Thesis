@@ -1,0 +1,73 @@
+/* ===== Footer ===== */
+.footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  background: var(--color-surface);
+  border-top: 2px solid var(--color-border);
+  box-shadow: 0 -4px 20px var(--color-shadow);
+}
+
+.footer__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-lg);
+  gap: var(--spacing-md);
+}
+
+.footer__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer__count {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.5px;
+}
+
+.footer__total {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: 0.3px;
+}
+
+/* Pay Button */
+.footer__pay-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-normal);
+  box-shadow: 0 3px 12px rgba(74, 124, 46, 0.3);
+  white-space: nowrap;
+}
+
+.footer__pay-btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 1px 6px rgba(74, 124, 46, 0.3);
+}
+
+.footer__pay-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.footer__pay-btn svg {
+  transition: transform var(--transition-normal);
+}
+
+.footer__pay-btn:not(:disabled):active svg {
+  transform: translateX(3px);
+}
