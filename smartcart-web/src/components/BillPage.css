@@ -339,11 +339,12 @@
 }
 
 .bill-receipt__th--price {
-  width: 56px;
+  width: 72px;
 }
 
 .bill-receipt__th--total {
-  width: 64px;
+  width: 80px;
+  padding-left: var(--spacing-sm);
 }
 
 .bill-receipt__tr {
@@ -381,6 +382,7 @@
 .bill-receipt__td--total {
   font-weight: 700;
   color: var(--color-text);
+  padding-left: var(--spacing-sm);
 }
 
 .bill-receipt__item-name {
@@ -437,12 +439,12 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  background: #4a7c2e;
   color: white;
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 1px;
-  padding: 6px 16px;
+  padding: 8px 18px;
   border-radius: 20px;
   box-shadow: 0 2px 8px rgba(74, 124, 46, 0.3);
   line-height: 1;
@@ -450,9 +452,9 @@
 
 .bill-receipt__payment-badge svg {
   flex-shrink: 0;
-  vertical-align: middle;
-  position: relative;
-  top: 0px;
+  display: block;
+  width: 14px;
+  height: 14px;
 }
 
 .bill-receipt__payment-details {
@@ -525,22 +527,21 @@
   background: #ffffff;
   border: 3px solid var(--color-primary);
   border-radius: var(--radius-lg);
-  padding: 16px;
+  padding: 12px;
   box-shadow:
     0 0 0 6px rgba(74, 124, 46, 0.08),
     0 4px 16px rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  aspect-ratio: 1;
+  max-width: 260px;
   box-sizing: border-box;
 }
 
 .bill-qr-card__canvas {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 .bill-qr-card__info {

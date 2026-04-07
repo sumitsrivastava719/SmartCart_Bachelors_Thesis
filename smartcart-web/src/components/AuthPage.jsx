@@ -6,7 +6,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
   const [formData, setFormData] = useState({
-    username: '',
+    customer_name: '',
     email: '',
     phone: '',
   });
@@ -26,10 +26,10 @@ export default function AuthPage() {
     const newErrors = {};
 
     if (!isLogin) {
-      if (!formData.username.trim()) {
-        newErrors.username = 'Username is required';
-      } else if (formData.username.trim().length < 3) {
-        newErrors.username = 'Username must be at least 3 characters';
+      if (!formData.customer_name.trim()) {
+        newErrors.customer_name = 'Customer name is required';
+      } else if (formData.customer_name.trim().length < 3) {
+        newErrors.customer_name = 'Customer name must be at least 3 characters';
       }
     }
 
@@ -90,7 +90,7 @@ export default function AuthPage() {
 
       const newUser = {
         id: Date.now(),
-        username: formData.username.trim(),
+        customer_name: formData.customer_name.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim(),
         createdAt: new Date().toISOString(),
@@ -107,7 +107,7 @@ export default function AuthPage() {
     setIsLogin((prev) => !prev);
     setErrors({});
     if (isLogin) {
-      setFormData({ username: '', email: '', phone: '' });
+      setFormData({ customer_name: '', email: '', phone: '' });
     }
   };
 
@@ -167,27 +167,27 @@ export default function AuthPage() {
           {isLogin ? 'Welcome back!' : 'Create your account'}
         </h2>
 
-        {/* Username - only for register */}
+        {/* Customer name - only for register */}
         {!isLogin && (
-          <div className={`auth__field ${errors.username ? 'auth__field--error' : ''}`}>
-            <label className="auth__label" htmlFor="username">
+          <div className={`auth__field ${errors.customer_name ? 'auth__field--error' : ''}`}>
+            <label className="auth__label" htmlFor="customer_name">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
-              Username
+              Customer name
             </label>
             <input
               className="auth__input"
               type="text"
-              id="username"
-              name="username"
+              id="customer_name"
+              name="customer_name"
               placeholder="Enter your name"
-              value={formData.username}
+              value={formData.customer_name}
               onChange={handleChange}
               autoComplete="name"
             />
-            {errors.username && <span className="auth__error">{errors.username}</span>}
+            {errors.customer_name && <span className="auth__error">{errors.customer_name}</span>}
           </div>
         )}
 

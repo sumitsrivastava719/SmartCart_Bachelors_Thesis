@@ -14,7 +14,7 @@ function encodeBillData(billData, user) {
     t: billData.totalPrice,
     pid: billData.paymentId,
     d: billData.date,
-    u: { name: user?.username, email: user?.email, phone: user?.phone },
+    u: { name: user?.customer_name, email: user?.email, phone: user?.phone },
   };
   return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
 }
@@ -38,7 +38,7 @@ function decodeBillData(encoded) {
         date: payload.d,
       },
       user: {
-        username: payload.u?.name,
+        customer_name: payload.u?.name,
         email: payload.u?.email,
         phone: payload.u?.phone,
       },
@@ -106,11 +106,11 @@ export default function BillPage() {
       new window.QRious({
         element: qrCanvasRef.current,
         value: shareUrl,
-        size: 400,
+        size: 490,
         foreground: '#2d5016',
         background: '#ffffff',
-        level: 'M',
-        padding: 8,
+        level: 'L',
+        padding: 0,
       });
     };
 
@@ -160,10 +160,11 @@ export default function BillPage() {
   const billDate = new Date(date);
   const invoiceNo = `SC-${billDate.getFullYear()}${String(billDate.getMonth() + 1).padStart(2, '0')}${String(billDate.getDate()).padStart(2, '0')}-${paymentId ? paymentId.slice(-6).toUpperCase() : '000000'}`;
 
-  const subtotal = totalPrice;
+  // GST is INCLUDED in product prices (18% = 9% CGST + 9% SGST)
+  const grandTotal = totalPrice;
+  const subtotal = grandTotal / 1.18;   // base price excl. GST
   const cgst = subtotal * 0.09;
   const sgst = subtotal * 0.09;
-  const grandTotal = subtotal + cgst + sgst;
 
   const handleDownload = async () => {
     const el = billRef.current;
@@ -288,7 +289,7 @@ export default function BillPage() {
                 <div className="bill-receipt__customer-grid">
                   <div className="bill-receipt__customer-row">
                     <span className="bill-receipt__label">Name</span>
-                    <span className="bill-receipt__value">{user?.username || 'Guest'}</span>
+                    <span className="bill-receipt__value">{user?.customer_name || 'Guest'}</span>
                   </div>
                   <div className="bill-receipt__customer-row">
                     <span className="bill-receipt__label">Email</span>
@@ -325,8 +326,8 @@ export default function BillPage() {
                           {item.weight && <div className="bill-receipt__item-weight">{item.weight}</div>}
                         </td>
                         <td className="bill-receipt__td bill-receipt__td--qty">{item.quantity}</td>
-                        <td className="bill-receipt__td bill-receipt__td--price">₹{item.price.toFixed(2)}</td>
-                        <td className="bill-receipt__td bill-receipt__td--total">₹{(item.price * item.quantity).toFixed(2)}</td>
+                        <td className="bill-receipt__td bill-receipt__td--price">₹{(item.price / 1.18).toFixed(2)}</td>
+                        <td className="bill-receipt__td bill-receipt__td--total">₹{((item.price / 1.18) * item.quantity).toFixed(2)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -338,7 +339,7 @@ export default function BillPage() {
               {/* Totals */}
               <div className="bill-receipt__totals">
                 <div className="bill-receipt__total-row">
-                  <span>Subtotal</span>
+                  <span>Subtotal (excl. GST)</span>
                   <span>₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="bill-receipt__total-row bill-receipt__total-row--tax">
@@ -361,10 +362,10 @@ export default function BillPage() {
               {/* Payment info */}
               <div className="bill-receipt__payment-info">
                 <div className="bill-receipt__payment-badge">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14" style={{ flexShrink: 0 }}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
-                  <span style={{ lineHeight: 1, display: 'inline-block' }}>PAID</span>
+                  <span>PAID</span>
                 </div>
                 <div className="bill-receipt__payment-details">
                   <div className="bill-receipt__meta-row">

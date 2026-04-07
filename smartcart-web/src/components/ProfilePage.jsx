@@ -26,7 +26,7 @@ export default function ProfilePage() {
             <circle cx="12" cy="7" r="4" />
           </svg>
         </div>
-        <h2 className="profile__name">{user.username || 'User'}</h2>
+        <h2 className="profile__name">{user.customer_name || 'User'}</h2>
         <p className="profile__joined">
           Member since {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }) : 'N/A'}
         </p>
@@ -45,7 +45,7 @@ export default function ProfilePage() {
           </div>
           <div className="profile__field-content">
             <span className="profile__field-label">Full Name</span>
-            <span className="profile__field-value">{user.username || '—'}</span>
+            <span className="profile__field-value">{user.customer_name || '—'}</span>
           </div>
         </div>
 

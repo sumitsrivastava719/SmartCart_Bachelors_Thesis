@@ -7,7 +7,7 @@ const RAZORPAY_KEY_ID = 'rzp_test_SZOvvhvQap7v80';
  * @param {Object} options
  * @param {Array} options.cartItems - Array of cart items
  * @param {number} options.totalPrice - Total price in INR
- * @param {Object} options.user - User details { username, email, phone }
+ * @param {Object} options.user - User details { customer_name, email, phone }
  * @param {Function} options.onSuccess - Callback on successful payment
  * @param {Function} options.onFailure - Callback on failed/dismissed payment
  */
@@ -33,7 +33,7 @@ export function initiatePayment({ cartItems, totalPrice, user, onSuccess, onFail
     description: description,
     image: '', // You can add a logo URL here
     prefill: {
-      name: user?.username || '',
+      name: user?.customer_name || '',
       email: user?.email || '',
       contact: user?.phone ? `+91${user.phone}` : '',
     },
