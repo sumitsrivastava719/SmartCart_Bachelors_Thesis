@@ -4,17 +4,17 @@ import Header from './components/Header';
 import BarcodeScanner from './components/BarcodeScanner';
 import CartList from './components/CartList';
 import Footer from './components/Footer';
-import { initiatePayment, isRazorpayReady } from './utils/payment';
 import './App.css';
 
 // Simple product database for demo - in production this would be an API call
 const PRODUCT_DB = {
-  '8901058851878': { name: "Lay's Classic Salted Potato Chips", weight: '48g', price: 20.00 },
-  '8901588001587': { name: 'Pepsi Soft Drink', weight: '750ml', price: 40.00 },
-  '8901725133443': { name: 'Lotte Choco Pie - Choco Burst', weight: '12 x 28g', price: 152.00 },
-  '8901063093218': { name: "Ching's Secret Schezwan Chutney", weight: '250g', price: 81.00 },
-  '8906108465648': { name: 'Wellcore - Creatine (Tropical Tango)', weight: '122g', price: 635.00 },
-  '8901491101493': { name: 'Bingo Tedhe Medhe Masala Tadka', weight: '80g', price: 32.00 },
+  '8901058851878': { productId: 'PID-LC7829', name: "Lay's Classic Salted Potato Chips", weight: '48g', price: 20.00, image: '' },
+  '8901588001587': { productId: 'PID-PS4410', name: 'Pepsi Soft Drink', weight: '750ml', price: 40.00, image: '' },
+  '8901725133443': { productId: 'PID-CP1133', name: 'Lotte Choco Pie - Choco Burst', weight: '12 x 28g', price: 152.00, image: '' },
+  '8901063093218': { productId: 'PID-SC9321', name: "Ching's Secret Schezwan Chutney", weight: '250g', price: 81.00, image: '' },
+  '8906108465648': { productId: 'PID-WC6564', name: 'Wellcore - Creatine (Tropical Tango)', weight: '122g', price: 635.00, image: '' },
+  '8901491101493': { productId: 'PID-BT1014', name: 'Bingo Tedhe Medhe Masala Tadka', weight: '80g', price: 32.00, image: '' },
+  'NO:YHUFI35021': { productId: 'PID-AV3502', name: 'Asus Vivobook', weight: '1.7kg', price: 45000.00, image: '/asus.png' },
 };
 
 function App() {
@@ -47,9 +47,11 @@ function App() {
           {
             id: Date.now(),
             barcode,
+            productId: product.productId || 'N/A',
             name: product.name,
             weight: product.weight,
             price: product.price,
+            image: product.image || '',
             quantity: 1,
           },
         ];
@@ -87,39 +89,60 @@ function App() {
   }, []);
 
   const handlePay = useCallback(() => {
-    if (!isRazorpayReady()) {
-      alert('Payment gateway is loading. Please try again in a moment.');
-      return;
-    }
+    if (cartItems.length === 0) return;
 
-    // Get logged-in user details
     const user = JSON.parse(localStorage.getItem('smartcart_current_user') || '{}');
     const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    initiatePayment({
-      cartItems,
-      totalPrice,
-      user,
-      onSuccess: (response) => {
-        // Save bill data before clearing cart
+    // Razorpay checkout options
+    const options = {
+      key: 'rzp_test_SaDemDe10xFOoG',
+      amount: Math.round(totalPrice * 100), // Razorpay expects amount in paise
+      currency: 'INR',
+      name: 'SmartCart Inc.',
+      description: `Payment for ${cartItems.length} item(s)`,
+      image: '/favicon.svg',
+      prefill: {
+        name: user.name || '',
+        email: user.email || '',
+        contact: user.phone || '',
+      },
+      theme: {
+        color: '#4a7c2e',
+      },
+      handler: function (response) {
+        // Payment successful
         const billData = {
           items: [...cartItems],
           totalPrice,
-          paymentId: response.paymentId,
+          paymentId: response.razorpay_payment_id,
           date: new Date().toISOString(),
         };
         localStorage.setItem('smartcart_last_bill', JSON.stringify(billData));
 
         setPaymentStatus('success');
-        setPaymentInfo(response);
-        // Clear cart after successful payment
+        setPaymentInfo({ paymentId: response.razorpay_payment_id });
         setCartItems([]);
       },
-      onFailure: (errorMsg) => {
-        setPaymentStatus('failed');
-        setPaymentInfo({ error: errorMsg });
+      modal: {
+        ondismiss: function () {
+          // User closed the Razorpay modal without completing payment
+          setPaymentStatus('failed');
+          setPaymentInfo({ error: 'Payment was cancelled. Please try again.' });
+        },
       },
+    };
+
+    const rzp = new window.Razorpay(options);
+
+    rzp.on('payment.failed', function (response) {
+      setPaymentStatus('failed');
+      setPaymentInfo({
+        error: response.error?.description || 'Payment failed. Please try again.',
+      });
     });
+
+    rzp.open();
   }, [cartItems]);
 
   // Auto-redirect to bill page after 2 seconds on payment success
@@ -202,3 +225,4 @@ function App() {
 }
 
 export default App;
+

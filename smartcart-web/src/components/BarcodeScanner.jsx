@@ -27,8 +27,8 @@ export default function BarcodeScanner({ onScan }) {
           const now = Date.now();
           const last = lastScannedRef.current;
 
-          // Block duplicate scans of the same barcode within 3 seconds
-          if (decodedText === last.code && now - last.timestamp < 3000) {
+          // Block duplicate scans of the same barcode within 10 seconds
+          if (decodedText === last.code && now - last.timestamp < 10000) {
             return;
           }
 
