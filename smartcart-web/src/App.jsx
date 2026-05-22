@@ -8,12 +8,9 @@ import './App.css';
 
 // Simple product database for demo - in production this would be an API call
 const PRODUCT_DB = {
-  '8901058851878': { productId: 'PID-LC7829', name: "Lay's Classic Salted Potato Chips", weight: '48g', price: 20.00, image: '' },
-  '8901588001587': { productId: 'PID-PS4410', name: 'Pepsi Soft Drink', weight: '750ml', price: 40.00, image: '' },
-  '8901725133443': { productId: 'PID-CP1133', name: 'Lotte Choco Pie - Choco Burst', weight: '12 x 28g', price: 152.00, image: '' },
-  '8901063093218': { productId: 'PID-SC9321', name: "Ching's Secret Schezwan Chutney", weight: '250g', price: 81.00, image: '' },
-  '8906108465648': { productId: 'PID-WC6564', name: 'Wellcore - Creatine (Tropical Tango)', weight: '122g', price: 635.00, image: '' },
-  '8901491101493': { productId: 'PID-BT1014', name: 'Bingo Tedhe Medhe Masala Tadka', weight: '80g', price: 32.00, image: '' },
+  '8901491366052': { productId: 'PID-LC7829', name: "Kurkure Puffcorn", weight: '58g', price: 20.00, image: '/kurkure.jpg' },
+  '8904043901015': { productId: 'PID-PS4410', name: 'Tata Salt', weight: '1kg', price: 28.00, image: '/salt.png' },
+  '8901928692006': { productId: 'PID-CP1133', name: 'Biskfarm biscuit', weight: '190g', price: 10.00, image: '/biscuit.png' },
   'NO:YHUFI35021': { productId: 'PID-AV3502', name: 'Asus Vivobook', weight: '1.7kg', price: 45000.00, image: '/asus.png' },
 };
 
@@ -193,7 +190,7 @@ function App() {
               <>
                 <div className="payment-toast__icon payment-toast__icon--success">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="32" height="32">
-                    <polyline points="20 6 9 17 4 12"/>
+                    <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
                 <h3 className="payment-toast__title">Payment Successful!</h3>
@@ -206,8 +203,8 @@ function App() {
               <>
                 <div className="payment-toast__icon payment-toast__icon--failed">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="32" height="32">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
                 </div>
                 <h3 className="payment-toast__title">Payment Failed</h3>
