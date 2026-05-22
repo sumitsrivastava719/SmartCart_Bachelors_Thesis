@@ -14,10 +14,20 @@ const PRODUCT_DB = {
   'NO:YHUFI35021': { productId: 'PID-AV3502', name: 'Asus Vivobook', weight: '1.7kg', price: 45000.00, image: '/asus.png' },
 };
 
+// Helper to get per-user cart storage key
+function getCartKey() {
+  try {
+    const user = JSON.parse(localStorage.getItem('smartcart_current_user') || '{}');
+    return user.email ? `smartcart_cart_${user.email}` : 'smartcart_cart_guest';
+  } catch {
+    return 'smartcart_cart_guest';
+  }
+}
+
 function App() {
   const [cartItems, setCartItems] = useState(() => {
     try {
-      const saved = localStorage.getItem('smartcart_cart_items');
+      const saved = localStorage.getItem(getCartKey());
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -29,7 +39,7 @@ function App() {
 
   // Persist cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('smartcart_cart_items', JSON.stringify(cartItems));
+    localStorage.setItem(getCartKey(), JSON.stringify(cartItems));
   }, [cartItems]);
 
   const handleScan = useCallback((barcode) => {

@@ -14,7 +14,6 @@ export default function Header() {
   const handleLogout = () => {
     setMenuOpen(false);
     localStorage.removeItem('smartcart_current_user');
-    localStorage.removeItem('smartcart_cart_items');
     navigate('/');
   };
 
