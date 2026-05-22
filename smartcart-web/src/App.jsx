@@ -15,10 +15,22 @@ const PRODUCT_DB = {
 };
 
 function App() {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem('smartcart_cart_items');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
   const [paymentStatus, setPaymentStatus] = useState(null); // null | 'success' | 'failed'
   const [paymentInfo, setPaymentInfo] = useState(null);
   const navigate = useNavigate();
+
+  // Persist cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('smartcart_cart_items', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const handleScan = useCallback((barcode) => {
     setCartItems((prevItems) => {
