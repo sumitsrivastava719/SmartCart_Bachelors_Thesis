@@ -1,16 +1,99 @@
-# React + Vite
+# SmartCart – Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A smart shopping cart system with barcode scanning, real-time ESP32 integration, and Razorpay payments.
 
-Currently, two official plugins are available:
+## Project Structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```
+smartcart-web/
+├── frontend/     # React (Vite) frontend
+│   ├── src/
+│   ├── public/
+│   └── package.json
+├── backend/      # Express + Socket.IO backend
+│   ├── src/
+│   └── package.json
+└── README.md
+```
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
+- Node.js v18+
+- npm
 
-## Expanding the ESLint configuration
+### 1. Install Dependencies
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+# Frontend
+cd frontend
+npm install
+
+# Backend
+cd ../backend
+npm install
+```
+
+### 2. Start Development Servers
+
+**Terminal 1 – Backend:**
+```bash
+cd backend
+npm run dev
+```
+
+**Terminal 2 – Frontend:**
+```bash
+cd frontend
+npm run dev
+```
+
+- Frontend runs on: `http://localhost:5173`
+- Backend runs on: `http://localhost:3001`
+- Frontend proxies `/api/*` calls to the backend automatically.
+
+## Architecture
+
+```
+┌──────────────┐    REST API     ┌───────────────┐   Socket.IO    ┌──────────┐
+│   Frontend   │ ──────────────▶ │    Backend    │ ─────────────▶ │  ESP32   │
+│   (React)    │ ◀────────────── │   (Express)   │ ◀───────────── │  Device  │
+└──────────────┘   JSON resp     └───────────────┘    ack/nack    └──────────┘
+```
+
+### API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/cart/scan` | Add scanned product to ESP32 cart |
+| PUT | `/api/cart/update` | Update product quantity on ESP32 |
+| DELETE | `/api/cart/remove` | Remove product from ESP32 cart |
+| GET | `/api/esp32/status` | Check ESP32 connection status |
+
+### ESP32 Socket.IO Events
+
+The ESP32 connects to the backend on the `/esp32` namespace. Events:
+
+| Event | Direction | Payload |
+|-------|-----------|---------|
+| `cart:add` | Backend → ESP32 | `{ productId, barcode, name, price, quantity }` |
+| `cart:update` | Backend → ESP32 | `{ productId, barcode, quantity, action }` |
+| `cart:remove` | Backend → ESP32 | `{ productId, barcode }` |
+
+Each event expects an **acknowledgment callback** from the ESP32:
+```js
+// Success
+callback({ success: true })
+
+// Failure
+callback({ success: false, error: "reason" })
+```
+
+## Environment Variables
+
+### Backend (`backend/.env`)
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `3001` | Backend server port |
+| `FRONTEND_URL` | `http://localhost:5173` | Allowed CORS origin |
+| `ESP32_ACK_TIMEOUT` | `5000` | Timeout (ms) for ESP32 acknowledgment |
