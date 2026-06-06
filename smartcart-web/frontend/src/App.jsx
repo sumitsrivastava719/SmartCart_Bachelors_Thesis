@@ -38,6 +38,7 @@ function App() {
   const [paymentInfo, setPaymentInfo] = useState(null);
   const [loadingItems, setLoadingItems] = useState({}); // { [itemId]: true } for items with pending API calls
   const [esp32Connected, setEsp32Connected] = useState(false);
+  const [scanLoading, setScanLoading] = useState(false); // waiting for ESP32 to ack a freshly scanned product
   const [apiError, setApiError] = useState(null); // { message: string } for ESP32 error toasts
   const navigate = useNavigate();
   // Persist cart to localStorage
@@ -137,12 +138,10 @@ function App() {
       return;
     }
 
-    // New product → add to cart
-    // Optimistically add
-    setCartItems((prev) => [...prev, newItem]);
-    setLoadingItems((prev) => ({ ...prev, [newItem.id]: true }));
+    // New product → wait for the ESP32 to acknowledge, then add it.
+    // Show a loader spinner while we wait (no item row yet).
+    setScanLoading(true);
 
-    // Call backend
     const result = await cartApi.scanProduct({
       productId: newItem.productId || 'N/A',
       barcode: newItem.barcode,
@@ -151,15 +150,12 @@ function App() {
       quantity: 1,
     });
 
-    setLoadingItems((prev) => {
-      const next = { ...prev };
-      delete next[newItem.id];
-      return next;
-    });
+    setScanLoading(false);
 
-    if (!result.success) {
-      // Remove the optimistically added item
-      setCartItems((prev) => prev.filter((item) => item.id !== newItem.id));
+    if (result.success) {
+      // ESP32 confirmed → add the item to the cart.
+      setCartItems((prev) => [...prev, newItem]);
+    } else {
       setApiError({ message: result.error || 'Failed to add item. ESP32 rejected.' });
     }
   }, [cartItems]);
@@ -325,6 +321,13 @@ function App() {
         />
       </main>
       <Footer itemCount={itemCount} totalPrice={totalPrice} onPay={handlePay} />
+
+      {/* Loader spinner while waiting for the ESP32 to confirm a scan */}
+      {scanLoading && (
+        <div className="scan-loading" id="scan-loading">
+          <div className="scan-loading__spinner"></div>
+        </div>
+      )}
 
       {/* API Error Toast (ESP32 failures) */}
       {apiError && (

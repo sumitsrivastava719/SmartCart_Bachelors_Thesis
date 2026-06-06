@@ -6,11 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-      },
-      '/socket.io': {
+      // Single raw WebSocket channel to the backend.
+      '/ws': {
         target: 'http://localhost:3001',
         ws: true,
         changeOrigin: true,

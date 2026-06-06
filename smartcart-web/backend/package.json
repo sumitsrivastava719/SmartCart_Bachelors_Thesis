@@ -1,20 +1,31 @@
 {
-  "name": "smartcart-backend",
+  "name": "server",
   "version": "1.0.0",
-  "description": "SmartCart backend - Express + Socket.IO server for ESP32 communication",
+  "main": "index.js",
   "type": "module",
-  "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "."
+    ],
+    "ext": "js,mjs,cjs",
+    "ignore": [
+      "node_modules/",
+      "package.json",
+      "package-lock.json",
+      ".4bnode/"
+    ]
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "socket.io": "^4.8.0"
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "ws": "^8.21.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.14"
   }
 }
