@@ -69,7 +69,8 @@ function App() {
     }
   }, [apiError]);
 
-  const handleScan = useCallback(async (barcode) => {
+  const handleScan = useCallback(async (rawBarcode) => {
+    const barcode = String(rawBarcode || '').trim();
     const product = PRODUCT_DB[barcode];
 
     // Only the known/hardcoded products are accepted. Anything else
