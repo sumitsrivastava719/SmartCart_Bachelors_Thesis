@@ -96,13 +96,11 @@ wsServer.on("connection", (ws, request) => {
           payload,
         );
       } else if (msg.type === "esp:command") {
-        // A command (e.g. "e") sent to the ESP32 as JSON.
+        // A command (e.g. "e") sent to the ESP32 as JSON: { "command": "e" }
         const command = String(msg.command ?? "");
-        const payload = { type: "command", command, timestamp: Date.now() };
-        const delivered = sendToEsp32(payload);
+        const delivered = sendToEsp32({ command });
         console.log(
           `[Browser → ESP32] command "${command}" (delivered to ${delivered} device(s))`,
-          payload,
         );
       } else {
         console.log("[Browser] →", msg);
