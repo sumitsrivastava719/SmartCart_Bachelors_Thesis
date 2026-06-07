@@ -12,12 +12,15 @@
  * the rest of the app barely changes. Auto-reconnects if the link drops.
  */
 
-const WS_PATH = '/ws';
+// Backend WebSocket endpoint. Points at the deployed Render backend.
+// Override locally with VITE_WS_URL in a .env file if needed.
+const WS_URL =
+  import.meta.env.VITE_WS_URL ||
+  'wss://smartcart-bachelors-thesis.onrender.com/ws';
 const RECONNECT_DELAY = 2000;
 
 function buildUrl() {
-  const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  return `${proto}//${window.location.host}${WS_PATH}`;
+  return WS_URL;
 }
 
 const listeners = new Map(); // eventType -> Set<callback>

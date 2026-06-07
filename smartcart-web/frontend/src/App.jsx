@@ -10,7 +10,7 @@ import './App.css';
 
 // Simple product database for demo - in production this would be an API call
 const PRODUCT_DB = {
-  '8901491366052': { productId: 'PID-LC7829', name: "Kurkure Puffcorn", weight: '58g', price: 20.00, image: '/kurkure.jpg' },
+  '6932169311649': { productId: 'PID-LC7829', name: "Oppo Enco Buds 2", weight: '38g', price: 2000.00, image: '/oppo.jpg' },
   '8904043901015': { productId: 'PID-PS4410', name: 'Tata Salt', weight: '1kg', price: 30.00, image: '/salt.png' },
   '8901928692006': { productId: 'PID-CP1133', name: 'Biskfarm Jeera Wonder', weight: '190g', price: 30.00, image: '/biscuit.png' },
 };

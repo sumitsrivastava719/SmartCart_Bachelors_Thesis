@@ -6,11 +6,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Single raw WebSocket channel to the backend.
+      // Single raw WebSocket channel to the deployed Render backend.
       '/ws': {
-        target: 'http://localhost:3001',
+        target: 'https://smartcart-bachelors-thesis.onrender.com',
         ws: true,
         changeOrigin: true,
+        secure: true,
       },
     },
   },
