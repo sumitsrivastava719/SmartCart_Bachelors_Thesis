@@ -54,18 +54,6 @@ function sendToEsp32(payload) {
   return delivered;
 }
 
-// Send a raw text string (e.g. "e") to every connected ESP32.
-function sendRawToEsp32(text) {
-  let delivered = 0;
-  for (const client of esp32Clients) {
-    if (client.readyState === client.OPEN) {
-      client.send(text);
-      delivered++;
-    }
-  }
-  return delivered;
-}
-
 // Tell every browser whether an ESP32 is currently online.
 function broadcastEsp32Status() {
   sendToBrowsers({ type: "esp32:status", connected: isEsp32Connected() });
@@ -108,11 +96,13 @@ wsServer.on("connection", (ws, request) => {
           payload,
         );
       } else if (msg.type === "esp:command") {
-        // A raw command (e.g. "e") to send straight to the ESP32.
+        // A command (e.g. "e") sent to the ESP32 as JSON.
         const command = String(msg.command ?? "");
-        const delivered = sendRawToEsp32(command);
+        const payload = { type: "command", command, timestamp: Date.now() };
+        const delivered = sendToEsp32(payload);
         console.log(
           `[Browser → ESP32] command "${command}" (delivered to ${delivered} device(s))`,
+          payload,
         );
       } else {
         console.log("[Browser] →", msg);
