@@ -102,6 +102,16 @@ export function removeProduct(data) {
 }
 
 /**
+ * Send a raw command to the ESP32 (e.g. "e"). Fire-and-forget — the
+ * backend forwards the command string straight to the device.
+ * @param {string} command
+ * @returns {boolean} whether the command was sent to the backend
+ */
+export function sendEspCommand(command) {
+  return socket.send({ type: 'esp:command', command });
+}
+
+/**
  * Current ESP32 connection status (from the live WebSocket).
  * @returns {Promise<{ connected: boolean }>}
  */

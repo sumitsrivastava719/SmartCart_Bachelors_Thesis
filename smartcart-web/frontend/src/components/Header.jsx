@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
 
-export default function Header({ esp32Connected = false }) {
+export default function Header({ esp32Connected = false, onEsp32Click }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -26,14 +26,16 @@ export default function Header({ esp32Connected = false }) {
       </h1>
 
       <div className="header__status-group">
-        <div
+        <button
+          type="button"
           className={`header__esp32-status ${esp32Connected ? 'header__esp32-status--connected' : 'header__esp32-status--disconnected'}`}
           id="esp32-status"
-          title={esp32Connected ? 'ESP32 Connected' : 'ESP32 Disconnected'}
+          title={esp32Connected ? 'ESP32 Connected — tap to send "e"' : 'ESP32 Disconnected — tap to send "e"'}
+          onClick={onEsp32Click}
         >
           <span className="header__esp32-dot"></span>
-          <span className="header__esp32-label">{esp32Connected ? 'ESP32' : 'ESP32'}</span>
-        </div>
+          <span className="header__esp32-label">ESP32</span>
+        </button>
 
         <button
           className="header__menu-btn"

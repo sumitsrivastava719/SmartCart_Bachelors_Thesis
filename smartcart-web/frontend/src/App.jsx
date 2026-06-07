@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import BarcodeScanner from './components/BarcodeScanner';
@@ -41,8 +41,15 @@ function App() {
   const [scanLoading, setScanLoading] = useState(false); // waiting for ESP32 to ack a freshly scanned product
   const [apiError, setApiError] = useState(null); // { message: string } for ESP32 error toasts
   const navigate = useNavigate();
-  // Persist cart to localStorage
+
+  // Always-current snapshot of the cart. The barcode scanner captures
+  // handleScan once, so reading cartItems from its closure would be
+  // stale — we read from this ref instead to detect existing items.
+  const cartItemsRef = useRef(cartItems);
+
+  // Persist cart to localStorage + keep the ref in sync
   useEffect(() => {
+    cartItemsRef.current = cartItems;
     localStorage.setItem(getCartKey(), JSON.stringify(cartItems));
   }, [cartItems]);
 
@@ -86,18 +93,8 @@ function App() {
           quantity: 1,
         };
 
-    // Check if the item is already in cart (increase quantity)
-    setCartItems((prevItems) => {
-      const existingIndex = prevItems.findIndex((item) => item.barcode === barcode);
-      if (existingIndex !== -1) {
-        // Will be handled by the async logic below
-        return prevItems;
-      }
-      return prevItems;
-    });
-
-    // Check existing items
-    const existingItem = cartItems.find((item) => item.barcode === barcode);
+    // Check existing items against the always-current cart snapshot.
+    const existingItem = cartItemsRef.current.find((item) => item.barcode === barcode);
 
     if (existingItem) {
       // Product already in cart → increase quantity
@@ -153,12 +150,21 @@ function App() {
     setScanLoading(false);
 
     if (result.success) {
-      // ESP32 confirmed → add the item to the cart.
-      setCartItems((prev) => [...prev, newItem]);
+      // ESP32 confirmed → add the item to the cart (guard against a
+      // race where the same product was added while we were waiting).
+      setCartItems((prev) =>
+        prev.some((item) => item.barcode === newItem.barcode)
+          ? prev.map((item) =>
+              item.barcode === newItem.barcode
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            )
+          : [...prev, newItem]
+      );
     } else {
       setApiError({ message: result.error || 'Failed to add item. ESP32 rejected.' });
     }
-  }, [cartItems]);
+  }, []);
 
   const handleRemoveItem = useCallback(async (itemId) => {
     const item = cartItems.find((i) => i.id === itemId);
@@ -228,6 +234,15 @@ function App() {
       setApiError({ message: result.error || 'Failed to update quantity. ESP32 rejected.' });
     }
   }, [cartItems, handleRemoveItem]);
+
+  // Clicking the ESP32 indicator sends a quick "e" command to the
+  // backend, which forwards it to the ESP32 device.
+  const handleEsp32Click = useCallback(() => {
+    const ok = cartApi.sendEspCommand('e');
+    if (!ok) {
+      setApiError({ message: 'Not connected to backend. Cannot reach ESP32.' });
+    }
+  }, []);
 
   const handlePay = useCallback(() => {
     if (cartItems.length === 0) return;
@@ -310,7 +325,7 @@ function App() {
 
   return (
     <div className="app">
-      <Header esp32Connected={esp32Connected} />
+      <Header esp32Connected={esp32Connected} onEsp32Click={handleEsp32Click} />
       <main className="app__main">
         <BarcodeScanner onScan={handleScan} />
         <CartList
