@@ -72,26 +72,24 @@ function App() {
   const handleScan = useCallback(async (barcode) => {
     const product = PRODUCT_DB[barcode];
 
+    // Only the known/hardcoded products are accepted. Anything else
+    // is rejected with a toast and never sent to the backend.
+    if (!product) {
+      setApiError({ message: 'Product not recognized. Please scan again.' });
+      return;
+    }
+
     // Build the new item
-    const newItem = product
-      ? {
-          id: Date.now(),
-          barcode,
-          productId: product.productId || 'N/A',
-          name: product.name,
-          weight: product.weight,
-          price: product.price,
-          image: product.image || '',
-          quantity: 1,
-        }
-      : {
-          id: Date.now(),
-          barcode,
-          name: `Product (${barcode})`,
-          weight: '',
-          price: 0.00,
-          quantity: 1,
-        };
+    const newItem = {
+      id: Date.now(),
+      barcode,
+      productId: product.productId || 'N/A',
+      name: product.name,
+      weight: product.weight,
+      price: product.price,
+      image: product.image || '',
+      quantity: 1,
+    };
 
     // Check existing items against the always-current cart snapshot.
     const existingItem = cartItemsRef.current.find((item) => item.barcode === barcode);
