@@ -45,7 +45,7 @@ Link: https://smartcart-inc.vercel.app/
 ---
 
 ## 🛒 Final Physical Project
-<img width="2048" height="1536" alt="IMG_20260608_102258 jpg" src="https://github.com/user-attachments/assets/b9b14f55-c6eb-49b5-bd53-63a3061bfc74" /> ![Uploading Screenshot 2026-06-16 at 1.29.01 PM.png…]()
+<img width="2048" height="1536" alt="IMG_20260608_102258 jpg" src="https://github.com/user-attachments/assets/b9b14f55-c6eb-49b5-bd53-63a3061bfc74" /> 
 
 
 
