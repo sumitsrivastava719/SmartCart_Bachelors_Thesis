@@ -48,13 +48,6 @@ Link: https://smartcart-inc.vercel.app/
 <img width="2048" height="1536" alt="IMG_20260608_102258 jpg" src="https://github.com/user-attachments/assets/b9b14f55-c6eb-49b5-bd53-63a3061bfc74" /> 
 
 
-
-
----
-
-## 📝 Note
-More details, documentation, and implementation updates will be added as development continues.
-
 ---
 
 ## 👥 Team
